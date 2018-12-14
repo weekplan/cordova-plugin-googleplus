@@ -51,20 +51,24 @@ From https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues/227#issu
 Fixes issue with G+ login window not closing correctly on ios 9
 */
 - (BOOL)indentity_application_options: (UIApplication *)app
-            openURL: (NSURL *)url
-            options: (NSDictionary *)options
+openURL: (NSURL *)url
+options: (NSDictionary *)options
 {
+  NSString *str = url.absoluteString;
+  if ( ![str  isEqual: @"WeekPlan://"]){
     GooglePlus* gp = (GooglePlus*) [self.viewController pluginObjects][@"GooglePlus"];
 
     if ([gp isSigningIn]) {
-        gp.isSigningIn = NO;
-        return [[GIDSignIn sharedInstance] handleURL:url
-            sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
-            annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
+      gp.isSigningIn = NO;
+      return [[GIDSignIn sharedInstance] handleURL:url
+      sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+      annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
     } else {
-        // Other
-        return [self indentity_application_options:app openURL:url options:options];
+      // Other
+      return [self indentity_application_options:app openURL:url options:options];
     }
+  }
+  return false;
 }
 @end
 
